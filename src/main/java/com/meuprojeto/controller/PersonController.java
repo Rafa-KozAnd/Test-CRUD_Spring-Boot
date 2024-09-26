@@ -8,16 +8,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-package com.meuprojeto.controller;
-
-import com.meuprojeto.model.Person;
-import com.meuprojeto.repository.PersonRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-
-@RestController
 @RequestMapping("/api/persons")
 public class PersonController {
 
