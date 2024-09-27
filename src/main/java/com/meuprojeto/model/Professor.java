@@ -1,6 +1,6 @@
 package com.meuprojeto.model;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 import java.math.BigDecimal;
 
 @Entity
