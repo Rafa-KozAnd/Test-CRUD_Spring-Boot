@@ -3,9 +3,10 @@ package com.meuprojeto.controller;
 import com.meuprojeto.model.Professor;
 import com.meuprojeto.repository.ProfessorRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 @RestController
@@ -16,32 +17,40 @@ public class ProfessorController {
     private ProfessorRepository professorRepository;
 
     @GetMapping
-    public List<Professor> getAllProfessors() {
-        return professorRepository.findAll();
+    public ResponseEntity<List<Professor>> getAllProfessors() {
+        List<Professor> professors = professorRepository.findAll();
+        return ResponseEntity.ok(professors);
     }
 
     @PostMapping
-    public Professor createProfessor(@RequestBody Professor professor) {
-        return professorRepository.save(professor);
+    public ResponseEntity<Professor> createProfessor(@RequestBody Professor professor) {
+        Professor savedProfessor = professorRepository.save(professor);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedProfessor);
     }
 
     @PutMapping("/{id}")
-    public Professor updateProfessor(@PathVariable Long id, @RequestBody Professor professorDetails) {
-        Professor professor = professorRepository.findById(id).orElseThrow();
-        
-        // Atualiza os campos herdados de Person
-        professor.setName(professorDetails.getName());
-        professor.setPhoneNumber(professorDetails.getPhoneNumber());
-        professor.setEmailAddress(professorDetails.getEmailAddress());
+    public ResponseEntity<Professor> updateProfessor(@PathVariable Long id, @RequestBody Professor professorDetails) {
+        Professor professor = professorRepository.findById(id).orElse(null);
 
-        // Atualiza o campo específico de Professor
+        if (professor == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         professor.setSalary(professorDetails.getSalary());
 
-        return professorRepository.save(professor);
+        Professor updatedProfessor = professorRepository.save(professor);
+        return ResponseEntity.ok(updatedProfessor);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteProfessor(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteProfessor(@PathVariable Long id) {
+        Professor professor = professorRepository.findById(id).orElse(null);
+
+        if (professor == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         professorRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

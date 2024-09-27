@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerenciar Pessoas</title>
+</head>
+<body>
+    <h1>Lista de Pessoas</h1>
+    <button onclick="window.location.href='create-person.html'">Criar Pessoa</button>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Email</th>
+                <th>Telefone</th>
+                <th>Ações</th>
+            </tr>
+        </thead>
+        <tbody id="person-table">
+            <!-- Pessoas serão listadas aqui -->
+        </tbody>
+    </table>
+
+    <script src="js/person.js"></script>
+</body>
+</html>

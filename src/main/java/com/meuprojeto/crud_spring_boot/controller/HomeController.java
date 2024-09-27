@@ -6,6 +6,6 @@ public class HomeController {
 
     @GetMapping("/")
     public String home() {
-        return "index"; // Isso indica que o Spring Boot deve procurar o arquivo index.html
+        return "index";
     }
 }
