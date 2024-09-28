@@ -8,7 +8,7 @@
 <body>
     <h1>Atualizar Pessoa</h1>
     <form id="update-person-form">
-        <input type="hidden" id="person-id" name="id">
+        <input type="hidden" id="person-id">
         
         <label for="name">Nome:</label>
         <input type="text" id="name" name="name" required><br><br>
@@ -19,7 +19,22 @@
         <label for="phone">Telefone:</label>
         <input type="text" id="phone" name="phone" required><br><br>
         
-        <button type="submit">Atualizar</button>
+        <label for="street">Rua:</label>
+        <input type="text" id="street" name="street">
+        
+        <label for="city">Cidade:</label>
+        <input type="text" id="city" name="city">
+        
+        <label for="state">Estado:</label>
+        <input type="text" id="state" name="state">
+        
+        <label for="zipCode">CEP:</label>
+        <input type="text" id="zipCode" name="zipCode">
+
+        <label for="country">Country:</label>
+        <input type="text" id="country" name="country">
+    
+        <button type="submit">Salvar</button>
     </form>
 
     <script src="/js/person.js"></script>

@@ -51,6 +51,10 @@ public class PersonController {
         person.setPhoneNumber(personDetails.getPhoneNumber());
         person.setEmailAddress(personDetails.getEmailAddress());
 
+        if (personDetails.getAddress() != null) {
+            person.setAddress(personDetails.getAddress());
+        }
+
         Person updatedPerson = personRepository.save(person);
         return ResponseEntity.ok(updatedPerson);
     }

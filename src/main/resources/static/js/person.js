@@ -12,7 +12,14 @@ document.addEventListener('DOMContentLoaded', function () {
             const person = {
                 name: document.getElementById('name').value,
                 emailAddress: document.getElementById('email').value,
-                phoneNumber: document.getElementById('phone').value
+                phoneNumber: document.getElementById('phone').value,
+                address: {
+                    street: document.getElementById('street').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zipCode: document.getElementById('zipCode').value,
+                    country: document.getElementById('country').value
+                }
             };
             fetch(apiBaseUrl, {
                 method: 'POST',
@@ -34,22 +41,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const updatePersonForm = document.getElementById('update-person-form');
     if (updatePersonForm) {
-        const personId = new URLSearchParams(window.location.search).get('id'); // Obtém o ID da URL
+        const personId = new URLSearchParams(window.location.search).get('id');
         if (personId) {
-            // Requisição GET para buscar os dados da pessoa
             fetch(`${apiBaseUrl}/${personId}`)
                 .then(response => {
                     if (response.ok) {
-                        return response.json(); // Converte a resposta em JSON
+                        return response.json()
                     } else {
                         throw new Error('Erro ao carregar os dados da pessoa');
                     }
                 })
                 .then(person => {
-                    document.getElementById('person-id').value = person.id; // Preenche o ID oculto
-                    document.getElementById('name').value = person.name; // Preenche o nome
-                    document.getElementById('email').value = person.emailAddress; // Preenche o email
-                    document.getElementById('phone').value = person.phoneNumber; // Preenche o telefone
+                    document.getElementById('person-id').value = person.id;
+                    document.getElementById('name').value = person.name;
+                    document.getElementById('email').value = person.emailAddress;
+                    document.getElementById('phone').value = person.phoneNumber;
+    
+                    if (person.address) {
+                        document.getElementById('street').value = person.address.street || '';
+                        document.getElementById('city').value = person.address.city || '';
+                        document.getElementById('state').value = person.address.state || '';
+                        document.getElementById('zipCode').value = person.address.zipCode || '';
+                        document.getElementById('country').value = person.address.country || '';
+                    }
                 })
                 .catch(error => {
                     console.error(error);
@@ -63,7 +77,13 @@ document.addEventListener('DOMContentLoaded', function () {
             const person = {
                 name: document.getElementById('name').value,
                 emailAddress: document.getElementById('email').value,
-                phoneNumber: document.getElementById('phone').value
+                phoneNumber: document.getElementById('phone').value,
+                address: {
+                    street: document.getElementById('street').value,
+                    city: document.getElementById('city').value,
+                    state: document.getElementById('state').value,
+                    zipCode: document.getElementById('zipCode').value
+                }
             };
             fetch(`${apiBaseUrl}/${id}`, {
                 method: 'PUT',
@@ -87,7 +107,7 @@ function loadPersons() {
         .then(response => response.json())
         .then(data => {
             const personTable = document.getElementById('person-table');
-            personTable.innerHTML = ''; // Limpa a tabela antes de adicionar novos dados
+            personTable.innerHTML = '';
             data.forEach(person => {
                 const row = `
                     <tr>
@@ -95,16 +115,20 @@ function loadPersons() {
                         <td>${person.name}</td>
                         <td>${person.emailAddress}</td>
                         <td>${person.phoneNumber}</td>
+                        <td>${person.address ? person.address.street : ''}</td>
+                        <td>${person.address ? person.address.city : ''}</td>
+                        <td>${person.address ? person.address.state : ''}</td>
+                        <td>${person.address ? person.address.zipCode : ''}</td>
+                        <td>${person.address ? person.address.country : ''}</td>
                         <td>
                             <button onclick="editPerson(${person.id})">Editar</button>
                             <button onclick="deletePerson(${person.id})">Deletar</button>
                         </td>
                     </tr>
                 `;
-                personTable.innerHTML += row; // Adiciona a linha à tabela
+                personTable.innerHTML += row;
             });
-        })
-        .catch(error => console.error('Erro ao carregar pessoas:', error)); // Lida com erros na requisição
+        });
 }
 
 function editPerson(id) {
