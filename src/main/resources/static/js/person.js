@@ -32,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     window.location.href = 'persons.html';
                 } else {
                     return response.text().then(text => {
-                        alert('Erro ao criar pessoa: ' + text);
+                        alert('Failed to create person: ' + text);
                     });
                 }
             });

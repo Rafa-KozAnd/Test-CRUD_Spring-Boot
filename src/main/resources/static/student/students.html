@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage People</title>
+    <title>Students List</title>
 </head>
 <body>
-    <h1>List of People</h1>
-    <button onclick="window.location.href='create-person.html'">Create Person</button>
+    <h1>Manage Students</h1>
+    <button onclick="window.location.href='create-student.html'">Create Student</button>
+    
     <table border="1">
         <thead>
             <tr>
@@ -15,23 +16,21 @@
                 <th>Name</th>
                 <th>Email</th>
                 <th>Phone</th>
-                <th>Street</th>
-                <th>City</th>
-                <th>State</th>
-                <th>Zip-Code</th>
-                <th>Country</th>
+                <th>Student Number</th>
+                <th>Photo URL</th>
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody id="person-table">
-            <!-- People rows will be populated here -->
+        <tbody id="student-table">
+            <!-- Student rows will be populated here -->
         </tbody>
     </table>
     </br></br></br>
     <nav>
+        <a href="/create-professor.html">Create Professor</a>
         <a href="/index.html">Back to Home</a>
     </nav>
 
-    <script src="/js/person.js"></script>
+    <script src="../js/student.js"></script>
 </body>
 </html>

@@ -17,27 +17,41 @@ public class StudentController {
     private StudentRepository studentRepository;
 
     @GetMapping
-    public List<Student> getAllStudents() {
-        return studentRepository.findAll();
+    public ResponseEntity<List<Student>> getAllStudents() {
+        List<Student> students = studentRepository.findAll();
+        return ResponseEntity.ok(students); // Certifique-se de que este retorno está correto
     }
 
     @PostMapping
     public ResponseEntity<Student> createStudent(@RequestBody Student student) {
         Student savedStudent = studentRepository.save(student);
-        return new ResponseEntity<>(savedStudent, HttpStatus.CREATED);
+        return ResponseEntity.status(HttpStatus.CREATED).body(savedStudent);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Student> updateStudent(@PathVariable Long id, @RequestBody Student studentDetails) {
-        Student student = studentRepository.findById(id).orElseThrow();
+        Student student = studentRepository.findById(id).orElse(null);
+
+        if (student == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         student.setStudentNumber(studentDetails.getStudentNumber());
         student.setPhoto(studentDetails.getPhoto());
-        return new ResponseEntity<>(studentRepository.save(student), HttpStatus.OK);
+
+        Student updatedStudent = studentRepository.save(student);
+        return ResponseEntity.ok(updatedStudent);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteStudent(@PathVariable Long id) {
+        Student student = studentRepository.findById(id).orElse(null);
+
+        if (student == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+
         studentRepository.deleteById(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
