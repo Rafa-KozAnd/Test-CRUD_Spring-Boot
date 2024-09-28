@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/persons")
@@ -19,6 +20,17 @@ public class PersonController {
     @GetMapping
     public List<Person> getAllPersons() {
         return personRepository.findAll();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Person> getPersonById(@PathVariable Long id) {
+        Optional<Person> person = personRepository.findById(id);
+
+        if (person.isPresent()) {
+            return ResponseEntity.ok(person.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping

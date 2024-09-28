@@ -28,16 +28,38 @@ document.addEventListener('DOMContentLoaded', function () {
                         alert('Erro ao criar pessoa: ' + text);
                     });
                 }
-            });            
+            });
         });
     }
 
     const updatePersonForm = document.getElementById('update-person-form');
     if (updatePersonForm) {
+        const personId = new URLSearchParams(window.location.search).get('id'); // Obtém o ID da URL
+        if (personId) {
+            // Requisição GET para buscar os dados da pessoa
+            fetch(`${apiBaseUrl}/${personId}`)
+                .then(response => {
+                    if (response.ok) {
+                        return response.json(); // Converte a resposta em JSON
+                    } else {
+                        throw new Error('Erro ao carregar os dados da pessoa');
+                    }
+                })
+                .then(person => {
+                    document.getElementById('person-id').value = person.id; // Preenche o ID oculto
+                    document.getElementById('name').value = person.name; // Preenche o nome
+                    document.getElementById('email').value = person.emailAddress; // Preenche o email
+                    document.getElementById('phone').value = person.phoneNumber; // Preenche o telefone
+                })
+                .catch(error => {
+                    console.error(error);
+                    alert('Erro ao carregar os dados da pessoa. Verifique o console para mais detalhes.');
+                });
+        }
+
         updatePersonForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            const id = new URLSearchParams(window.location.search).get('id');
-            console.log(id)
+            const id = document.getElementById('person-id').value;
             const person = {
                 name: document.getElementById('name').value,
                 emailAddress: document.getElementById('email').value,
