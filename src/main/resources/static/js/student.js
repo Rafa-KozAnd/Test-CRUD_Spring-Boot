@@ -101,6 +101,7 @@ function loadStudents() {
                         <td>${student.emailAddress}</td>
                         <td>${student.phoneNumber}</td>
                         <td>${student.studentNumber}</td>
+                        <td>${student.photo}</td>
                         <td>
                             <button onclick="editStudent(${student.id})">Edit</button>
                             <button onclick="deleteStudent(${student.id})">Delete</button>
