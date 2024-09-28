@@ -1,7 +1,7 @@
-package com.meuprojeto.controller;
+package com.meuprojeto.crud_spring_boot.controller;
 
-import com.meuprojeto.model.Person;
-import com.meuprojeto.repository.PersonRepository;
+import com.meuprojeto.crud_spring_boot.model.Person;
+import com.meuprojeto.crud_spring_boot.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,16 +16,15 @@ public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
-    @GetMapping
-    public ResponseEntity<List<Person>> getAllPersons() {
-        List<Person> persons = personRepository.findAll();
-        return ResponseEntity.ok(persons);
-    }
-
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody Person person) {
         Person savedPerson = personRepository.save(person);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
+    }
+
+    @GetMapping
+    public List<Person> getAllPersons() {
+        return personRepository.findAll();
     }
 
     @PutMapping("/{id}")

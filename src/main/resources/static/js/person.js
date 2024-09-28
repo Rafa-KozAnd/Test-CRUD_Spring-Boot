@@ -1,11 +1,70 @@
 const apiBaseUrl = "/api/persons";
 
+document.addEventListener('DOMContentLoaded', function () {
+    if (document.getElementById('person-table')) {
+        loadPersons();
+    }
+
+    const createPersonForm = document.getElementById('create-person-form');
+    if (createPersonForm) {
+        createPersonForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const person = {
+                name: document.getElementById('name').value,
+                emailAddress: document.getElementById('email').value,
+                phoneNumber: document.getElementById('phone').value
+            };
+            fetch(apiBaseUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(person),
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = 'persons.html';
+                } else {
+                    return response.text().then(text => {
+                        alert('Erro ao criar pessoa: ' + text);
+                    });
+                }
+            });            
+        });
+    }
+
+    const updatePersonForm = document.getElementById('update-person-form');
+    if (updatePersonForm) {
+        updatePersonForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+            const id = document.getElementById('person-id').value;
+            const person = {
+                name: document.getElementById('name').value,
+                emailAddress: document.getElementById('email').value,
+                phoneNumber: document.getElementById('phone').value
+            };
+            fetch(`${apiBaseUrl}/${id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(person),
+            }).then(response => {
+                if (response.ok) {
+                    window.location.href = 'persons.html';
+                } else {
+                    alert('Erro ao atualizar pessoa.');
+                }
+            });
+        });
+    }
+});
+
 function loadPersons() {
     fetch(apiBaseUrl)
         .then(response => response.json())
         .then(data => {
             const personTable = document.getElementById('person-table');
-            personTable.innerHTML = '';
+            personTable.innerHTML = ''; // Limpa a tabela antes de adicionar novos dados
             data.forEach(person => {
                 const row = `
                     <tr>
@@ -19,55 +78,15 @@ function loadPersons() {
                         </td>
                     </tr>
                 `;
-                personTable.innerHTML += row;
+                personTable.innerHTML += row; // Adiciona a linha à tabela
             });
-        });
+        })
+        .catch(error => console.error('Erro ao carregar pessoas:', error)); // Lida com erros na requisição
 }
-
-document.getElementById('create-person-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const person = {
-        name: document.getElementById('name').value,
-        emailAddress: document.getElementById('email').value,
-        phoneNumber: document.getElementById('phone').value
-    };
-    fetch(apiBaseUrl, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(person),
-    }).then(response => {
-        if (response.ok) {
-            window.location.href = 'persons.html';
-        }
-    });
-});
 
 function editPerson(id) {
     window.location.href = `update-person.html?id=${id}`;
 }
-
-document.getElementById('update-person-form').addEventListener('submit', function (e) {
-    e.preventDefault();
-    const id = document.getElementById('person-id').value;
-    const person = {
-        name: document.getElementById('name').value,
-        emailAddress: document.getElementById('email').value,
-        phoneNumber: document.getElementById('phone').value
-    };
-    fetch(`${apiBaseUrl}/${id}`, {
-        method: 'PUT',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(person),
-    }).then(response => {
-        if (response.ok) {
-            window.location.href = 'persons.html';
-        }
-    });
-});
 
 function deletePerson(id) {
     fetch(`${apiBaseUrl}/${id}`, {
@@ -77,8 +96,4 @@ function deletePerson(id) {
             loadPersons();
         }
     });
-}
-
-if (document.getElementById('person-table')) {
-    loadPersons();
 }

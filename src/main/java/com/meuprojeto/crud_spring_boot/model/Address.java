@@ -1,4 +1,4 @@
-package com.meuprojeto.model;
+package com.meuprojeto.crud_spring_boot.model;
 
 import jakarta.persistence.*;
 import jakarta.persistence.Entity;

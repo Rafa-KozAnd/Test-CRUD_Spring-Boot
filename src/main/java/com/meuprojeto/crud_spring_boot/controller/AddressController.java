@@ -1,7 +1,7 @@
-package com.meuprojeto.controller;
+package com.meuprojeto.crud_spring_boot.controller;
 
-import com.meuprojeto.model.Address;
-import com.meuprojeto.repository.AddressRepository;
+import com.meuprojeto.crud_spring_boot.model.Address;
+import com.meuprojeto.crud_spring_boot.repository.AddressRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
