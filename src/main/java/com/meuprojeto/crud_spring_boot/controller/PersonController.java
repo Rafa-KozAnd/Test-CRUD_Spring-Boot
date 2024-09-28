@@ -16,15 +16,15 @@ public class PersonController {
     @Autowired
     private PersonRepository personRepository;
 
+    @GetMapping
+    public List<Person> getAllPersons() {
+        return personRepository.findAll();
+    }
+
     @PostMapping
     public ResponseEntity<Person> createPerson(@RequestBody Person person) {
         Person savedPerson = personRepository.save(person);
         return ResponseEntity.status(HttpStatus.CREATED).body(savedPerson);
-    }
-
-    @GetMapping
-    public List<Person> getAllPersons() {
-        return personRepository.findAll();
     }
 
     @PutMapping("/{id}")

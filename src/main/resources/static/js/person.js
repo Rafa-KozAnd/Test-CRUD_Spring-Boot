@@ -36,7 +36,8 @@ document.addEventListener('DOMContentLoaded', function () {
     if (updatePersonForm) {
         updatePersonForm.addEventListener('submit', function (e) {
             e.preventDefault();
-            const id = document.getElementById('person-id').value;
+            const id = new URLSearchParams(window.location.search).get('id');
+            console.log(id)
             const person = {
                 name: document.getElementById('name').value,
                 emailAddress: document.getElementById('email').value,
