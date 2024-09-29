@@ -1,6 +1,5 @@
 package com.meuprojeto.crud_spring_boot.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.meuprojeto.crud_spring_boot.model.Person;
 import com.meuprojeto.crud_spring_boot.repository.PersonRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -8,102 +7,108 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
-
 import java.util.Optional;
-
-import static org.mockito.ArgumentMatchers.any;
+import java.util.List;
+import java.util.Arrays;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@RunWith(SpringRunner.class)
-public class PersonControllerTest {
+class PersonControllerTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+    @Mock
+    private PersonRepository personRepository;
 
     @InjectMocks
     private PersonController personController;
 
-    @MockBean
-    private PersonRepository personRepository;
-
-    private ObjectMapper objectMapper;
+    private Person person;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         MockitoAnnotations.openMocks(this);
-        objectMapper = new ObjectMapper();
-    }
-
-    private static String asJsonString(final Object obj) {
-        try {
-            return new ObjectMapper().writeValueAsString(obj);
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+        person = new Person();
+        person.setId(1L);
+        person.setName("John Doe");
+        person.setPhoneNumber("123456789");
+        person.setEmailAddress("johndoe@example.com");
     }
 
     @Test
-    public void testCreatePerson() {
-        Person person = new Person();
-        person.setName("John Smith");
-        person.setEmailAddress("john.smith@example.com");
+    void testGetAllPersons() {
+        List<Person> persons = Arrays.asList(person);
+        when(personRepository.findAll()).thenReturn(persons);
 
+        List<Person> result = personController.getAllPersons();
+        assertEquals(1, result.size());
+        assertEquals(person.getName(), result.get(0).getName());
+    }
+
+    @Test
+    void testGetPersonById_PersonFound() {
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+
+        ResponseEntity<Person> response = personController.getPersonById(1L);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertEquals(person.getName(), response.getBody().getName());
+    }
+
+    @Test
+    void testGetPersonById_PersonNotFound() {
+        when(personRepository.findById(1L)).thenReturn(Optional.empty());
+
+        ResponseEntity<Person> response = personController.getPersonById(1L);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testCreatePerson() {
         when(personRepository.save(any(Person.class))).thenReturn(person);
 
         ResponseEntity<Person> response = personController.createPerson(person);
-
         assertEquals(HttpStatus.CREATED, response.getStatusCode());
-        assertEquals("John Smith", response.getBody().getName());
-    }
-
-    //ERRO
-    @Test
-    public void testGetPersons() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/persons/{id}", 1)
-            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(MockMvcResultMatchers.status().isOk());
+        assertEquals(person.getName(), response.getBody().getName());
     }
 
     @Test
-    public void testUpdatePerson() {
-        Long personId = 1L;
-        Person existingPerson = new Person();
-        existingPerson.setName("Old Name");
-        existingPerson.setEmailAddress("old@example.com");
-
+    void testUpdatePerson_PersonFound() {
         Person updatedPersonDetails = new Person();
-        updatedPersonDetails.setName("Updated Name");
-        updatedPersonDetails.setEmailAddress("updated@example.com");
+        updatedPersonDetails.setName("Jane Doe");
+        updatedPersonDetails.setPhoneNumber("987654321");
+        updatedPersonDetails.setEmailAddress("janedoe@example.com");
 
-        when(personRepository.findById(personId)).thenReturn(Optional.of(existingPerson));
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
         when(personRepository.save(any(Person.class))).thenReturn(updatedPersonDetails);
 
-        ResponseEntity<Person> response = personController.updatePerson(personId, updatedPersonDetails);
-
+        ResponseEntity<Person> response = personController.updatePerson(1L, updatedPersonDetails);
         assertEquals(HttpStatus.OK, response.getStatusCode());
-        assertEquals("Updated Name", response.getBody().getName());
+        assertEquals("Jane Doe", response.getBody().getName());
     }
 
-    //ERRO
     @Test
-    public void testDeletePerson() throws Exception {
-        when(personRepository.findById(1L)).thenReturn(Optional.of(new Person()));
+    void testUpdatePerson_PersonNotFound() {
+        when(personRepository.findById(1L)).thenReturn(Optional.empty());
 
-        mockMvc.perform(MockMvcRequestBuilders.delete("/api/persons/{id}", 1)
-                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+        ResponseEntity<Person> response = personController.updatePerson(1L, person);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+    }
+
+    @Test
+    void testDeletePerson_PersonFound() {
+        when(personRepository.findById(1L)).thenReturn(Optional.of(person));
+
+        ResponseEntity<Void> response = personController.deletePerson(1L);
+        assertEquals(HttpStatus.NO_CONTENT, response.getStatusCode());
+        verify(personRepository, times(1)).deleteById(1L);
+    }
+
+    @Test
+    void testDeletePerson_PersonNotFound() {
+        when(personRepository.findById(1L)).thenReturn(Optional.empty());
+
+        ResponseEntity<Void> response = personController.deletePerson(1L);
+        assertEquals(HttpStatus.NOT_FOUND, response.getStatusCode());
+        verify(personRepository, times(0)).deleteById(1L);
     }
 }

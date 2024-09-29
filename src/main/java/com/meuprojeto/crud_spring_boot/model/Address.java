@@ -14,11 +14,9 @@ public class Address {
     private String zipCode;
     private String country;
 
-    // Construtor padrão
     public Address() {}
 
-    // Construtor com parâmetros
-    public Address(String street, String city, String state, String zipCode, String country) {
+     public Address(String street, String city, String state, String zipCode, String country) {
         this.street = street;
         this.city = city;
         this.state = state;
