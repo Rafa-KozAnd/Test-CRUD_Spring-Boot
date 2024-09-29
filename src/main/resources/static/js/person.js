@@ -71,10 +71,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('country').value = person.address.country || '';
                     }
 
-                    document.getElementById('personType').value = person.personType === 0 ? 'student' : 'professor'; // Corrigido aqui
-                    document.getElementById('studentNumber').value = person.studentNumber || ''; // Corrigido aqui
-                    document.getElementById('photo').value = person.photo || ''; // Corrigido aqui
-                    document.getElementById('salary').value = person.salary || ''; // Corrigido aqui
+                    document.getElementById('personType').value = person.personType === 0 ? 'student' : 'professor';
+                    document.getElementById('studentNumber').value = person.studentNumber || '';
+                    document.getElementById('photo').value = person.photo || '';
+                    document.getElementById('salary').value = person.salary || '';
                 })
                 .catch(error => {
                     console.error(error);
@@ -119,7 +119,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Mover a lógica do tipo de pessoa para aqui
     const personTypeSelector = document.getElementById('personType');
     if (personTypeSelector) {
         personTypeSelector.addEventListener('change', function () {
