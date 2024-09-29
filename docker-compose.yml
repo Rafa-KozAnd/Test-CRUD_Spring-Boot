@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  app:
+    image: crud-spring-boot-app
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - h2db
+
+  h2db:
+    image: oscarfonts/h2
+    ports:
+      - "9090:8082" # Porta do H2 Console

@@ -27,13 +27,31 @@ mvn clean install
 Após iniciar sua aplicação, você pode acessar a consola H2 para visualizar e manipular os dados. Abra um navegador e vá para:
 
 ```bash
-http://localhost:8080/h2-console
+http://localhost:9090/h2-console
 ```
 
 ### Teste Unitários do C.R.U.D.
 
 ```bash
 mvn test
+```
+### Gerar a imagem JAR e recompilar o projeto
+
+```bash
+mvn clean package
+```
+
+### Executar a imagem Docker
+
+Usei um porta diferente do host (8081) para a do container (8080)
+
+```bash
+docker run -p 8081:8080 crud-spring-boot-app
+```
+
+Para rodar a aplicação com o compose com o banco:
+```bash
+docker-compose up --build
 ```
 
 ### Tecnologias Utilizadas
@@ -46,3 +64,5 @@ mvn test
 - H2 Database: Banco de dados em memória utilizado para armazenar os dados.
 
 - Maven: Ferramenta de gerenciamento de dependências e build.
+
+- Docker: Ferramenta para container;
