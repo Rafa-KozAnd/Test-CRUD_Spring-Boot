@@ -19,6 +19,25 @@
         <label for="phone">Phone:</label>
         <input type="text" id="phone" name="phone" required><br><br>
         
+        <label for="personType">Person Type:</label>
+        <select id="personType" required>
+            <option value="student">Student</option>
+            <option value="professor">Professor</option>
+        </select><br>
+
+        <div id="studentFields" style="display:none;">
+            <label for="studentNumber">Student Number:</label>
+            <input type="text" id="studentNumber"><br>
+            
+            <label for="photo">Photo URL:</label>
+            <input type="text" id="photo"><br>
+        </div>
+    
+        <div id="professorFields" style="display:none;">
+            <label for="salary">Salary:</label>
+            <input type="number" id="salary"><br>
+        </div>
+
         <label for="street">Street:</label>
         <input type="text" id="street" name="street">
         
