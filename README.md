@@ -22,9 +22,9 @@ Para reinstalar e atualizar/limpar o sistema:
 mvn clean install
 ```
 
-### Acessando a Consola H2
+### Acessando o Console H2
 
-Após iniciar sua aplicação, você pode acessar a consola H2 para visualizar e manipular os dados. Abra um navegador e vá para:
+Após iniciar sua aplicação, você pode acessar o consolr H2 para visualizar e manipular os dados. Abra um navegador e vá para:
 
 ```bash
 http://localhost:9090/h2-console
@@ -35,6 +35,7 @@ http://localhost:9090/h2-console
 ```bash
 mvn test
 ```
+
 ### Gerar a imagem JAR e recompilar o projeto
 
 ```bash
@@ -49,7 +50,7 @@ Usei um porta diferente do host (8081) para a do container (8080)
 docker run -p 8081:8080 crud-spring-boot-app
 ```
 
-Para rodar a aplicação com o compose com o banco:
+Para rodar a aplicação com o compose e com o banco:
 ```bash
 docker-compose up --build
 ```
