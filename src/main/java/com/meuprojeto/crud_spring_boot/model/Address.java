@@ -1,16 +1,6 @@
 package com.meuprojeto.crud_spring_boot.model;
 
 import jakarta.persistence.*;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
 
 @Entity
 public class Address {
@@ -23,6 +13,18 @@ public class Address {
     private String state;
     private String zipCode;
     private String country;
+
+    // Construtor padrão
+    public Address() {}
+
+    // Construtor com parâmetros
+    public Address(String street, String city, String state, String zipCode, String country) {
+        this.street = street;
+        this.city = city;
+        this.state = state;
+        this.zipCode = zipCode;
+        this.country = country;
+    }
 
     // Getters
     public Long getId() {
