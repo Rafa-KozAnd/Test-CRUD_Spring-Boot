@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
@@ -26,6 +27,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @SpringBootTest
 @AutoConfigureMockMvc
+@RunWith(SpringRunner.class)
 public class PersonControllerTest {
 
     @Autowired
@@ -34,7 +36,7 @@ public class PersonControllerTest {
     @InjectMocks
     private PersonController personController;
 
-    @Mock
+    @MockBean
     private PersonRepository personRepository;
 
     private ObjectMapper objectMapper;
@@ -67,6 +69,7 @@ public class PersonControllerTest {
         assertEquals("John Smith", response.getBody().getName());
     }
 
+    //ERRO
     @Test
     public void testGetPersons() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/api/persons/{id}", 1)
@@ -86,7 +89,7 @@ public class PersonControllerTest {
         updatedPersonDetails.setEmailAddress("updated@example.com");
 
         when(personRepository.findById(personId)).thenReturn(Optional.of(existingPerson));
-        when(personRepository.save(any(Person.class))).thenReturn(updatedPersonDetails); // Certifique-se de que está usando any()
+        when(personRepository.save(any(Person.class))).thenReturn(updatedPersonDetails);
 
         ResponseEntity<Person> response = personController.updatePerson(personId, updatedPersonDetails);
 
@@ -94,6 +97,7 @@ public class PersonControllerTest {
         assertEquals("Updated Name", response.getBody().getName());
     }
 
+    //ERRO
     @Test
     public void testDeletePerson() throws Exception {
         when(personRepository.findById(1L)).thenReturn(Optional.of(new Person()));
