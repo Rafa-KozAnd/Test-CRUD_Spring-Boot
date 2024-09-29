@@ -20,15 +20,12 @@ document.addEventListener('DOMContentLoaded', function () {
                     state: document.getElementById('state').value,
                     zipCode: document.getElementById('zipCode').value,
                     country: document.getElementById('country').value
-                }
+                },
+                personType: personType === 'student' ? 0 : 1,
+                studentNumber: document.getElementById('studentNumber').value,
+                photo: document.getElementById('photo').value,
+                salary: document.getElementById('salary').value
             };
-
-            if (personType === 'student') {
-                person.studentNumber = document.getElementById('studentNumber').value;
-                person.photo = document.getElementById('photo').value;
-            } else if (personType === 'professor') {
-                person.salary = document.getElementById('salary').value;
-            }
 
             fetch(apiBaseUrl, {
                 method: 'POST',
@@ -61,13 +58,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
                 })
                 .then(person => {
-                    // Preenche os dados básicos da pessoa
                     document.getElementById('person-id').value = person.id;
                     document.getElementById('name').value = person.name;
                     document.getElementById('email').value = person.emailAddress;
                     document.getElementById('phone').value = person.phoneNumber;
-    
-                    // Preenche o endereço
+
                     if (person.address) {
                         document.getElementById('street').value = person.address.street || '';
                         document.getElementById('city').value = person.address.city || '';
@@ -75,38 +70,22 @@ document.addEventListener('DOMContentLoaded', function () {
                         document.getElementById('zipCode').value = person.address.zipCode || '';
                         document.getElementById('country').value = person.address.country || '';
                     }
-    
-                    // Verifica se a pessoa é Estudante ou Professor e mostra os campos correspondentes
-                    if (person.studentNumber !== undefined) {
-                        document.getElementById('personType').value = 'student';
-                        document.getElementById('studentNumber').value = person.studentNumber || '';
-                        document.getElementById('photo').value = person.photo || '';
-                        document.getElementById('studentFields').style.display = 'block';
-                        document.getElementById('professorFields').style.display = 'none';
-                    } else if (person.salary !== undefined) {
-                        document.getElementById('personType').value = 'professor';
-                        document.getElementById('salary').value = person.salary || '';
-                        document.getElementById('studentFields').style.display = 'none';
-                        document.getElementById('professorFields').style.display = 'block';
-                    } else {
-                        document.getElementById('personType').value = 'person';
-                        document.getElementById('studentFields').style.display = 'none';
-                        document.getElementById('professorFields').style.display = 'none';
-                    }
+
+                    document.getElementById('personType').value = person.personType === 0 ? 'student' : 'professor'; // Corrigido aqui
+                    document.getElementById('studentNumber').value = person.studentNumber || ''; // Corrigido aqui
+                    document.getElementById('photo').value = person.photo || ''; // Corrigido aqui
+                    document.getElementById('salary').value = person.salary || ''; // Corrigido aqui
                 })
                 .catch(error => {
                     console.error(error);
                     alert('Erro ao carregar os dados da pessoa. Verifique o console para mais detalhes.');
                 });
         }
-    
-        // Função de submit para atualizar a pessoa
+
         updatePersonForm.addEventListener('submit', function (e) {
             e.preventDefault();
             const id = document.getElementById('person-id').value;
-            const personType = document.getElementById('personType').value;
-    
-            // Dados básicos de uma pessoa
+
             const person = {
                 name: document.getElementById('name').value,
                 emailAddress: document.getElementById('email').value,
@@ -117,18 +96,13 @@ document.addEventListener('DOMContentLoaded', function () {
                     state: document.getElementById('state').value,
                     zipCode: document.getElementById('zipCode').value,
                     country: document.getElementById('country').value
-                }
+                },
+                personType: document.getElementById('personType').value === 'student' ? 0 : 1,
+                studentNumber: document.getElementById('studentNumber').value || null,
+                photo: document.getElementById('photo').value || null,
+                salary: document.getElementById('salary').value || null
             };
-    
-            // Adiciona os campos extras de acordo com o tipo
-            if (personType === 'student') {
-                person.studentNumber = document.getElementById('studentNumber').value;
-                person.photo = document.getElementById('photo').value;
-            } else if (personType === 'professor') {
-                person.salary = document.getElementById('salary').value;
-            }
-    
-            // Faz o PUT para atualizar os dados
+
             fetch(`${apiBaseUrl}/${id}`, {
                 method: 'PUT',
                 headers: {
@@ -144,7 +118,27 @@ document.addEventListener('DOMContentLoaded', function () {
             });
         });
     }
-    
+
+    // Mover a lógica do tipo de pessoa para aqui
+    const personTypeSelector = document.getElementById('personType');
+    if (personTypeSelector) {
+        personTypeSelector.addEventListener('change', function () {
+            const personType = this.value;
+            const studentFields = document.getElementById('studentFields');
+            const professorFields = document.getElementById('professorFields');
+            
+            if (personType === 'student') {
+                studentFields.style.display = 'block';
+                professorFields.style.display = 'none';
+            } else if (personType === 'professor') {
+                studentFields.style.display = 'none';
+                professorFields.style.display = 'block';
+            } else {
+                studentFields.style.display = 'none';
+                professorFields.style.display = 'none';
+            }
+        });
+    }
 });
 
 function loadPersons() {
@@ -154,21 +148,7 @@ function loadPersons() {
             const personTable = document.getElementById('person-table');
             personTable.innerHTML = '';
             data.forEach(person => {
-                let personType = '';
-                let studentNumber = '';
-                let photo = '';
-                let salary = '';
-
-                if (person.studentNumber !== undefined) {
-                    personType = 'Student';
-                    studentNumber = person.studentNumber;
-                    photo = person.photo || '';
-                } else if (person.salary !== undefined) {
-                    personType = 'Professor';
-                    salary = person.salary;
-                } else {
-                    personType = 'Person';
-                }
+                let personType = person.personType === 0 ? 'Student' : 'Professor';
 
                 const row = `
                     <tr>
@@ -182,9 +162,9 @@ function loadPersons() {
                         <td>${person.address ? person.address.zipCode : ''}</td>
                         <td>${person.address ? person.address.country : ''}</td>
                         <td>${personType}</td>
-                        <td>${studentNumber}</td>
-                        <td>${photo}</td>
-                        <td>${salary}</td>
+                        <td>${person.studentNumber}</td>
+                        <td>${person.photo}</td>
+                        <td>${person.salary}</td>
                         <td>
                             <button onclick="editPerson(${person.id})">Editar</button>
                             <button onclick="deletePerson(${person.id})">Deletar</button>
@@ -209,20 +189,3 @@ function deletePerson(id) {
         }
     });
 }
-
-document.getElementById('personType').addEventListener('change', function () {
-    const personType = this.value;
-    const studentFields = document.getElementById('studentFields');
-    const professorFields = document.getElementById('professorFields');
-    
-    if (personType === 'student') {
-        studentFields.style.display = 'block';
-        professorFields.style.display = 'none';
-    } else if (personType === 'professor') {
-        studentFields.style.display = 'none';
-        professorFields.style.display = 'block';
-    } else {
-        studentFields.style.display = 'none';
-        professorFields.style.display = 'none';
-    }
-});

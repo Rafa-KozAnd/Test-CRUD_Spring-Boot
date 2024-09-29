@@ -15,6 +15,8 @@ public class Person {
     private String phoneNumber;
     private String emailAddress;
 
+    private int personType;
+
     @Enumerated(EnumType.STRING)
     private Status status;
 
@@ -47,6 +49,10 @@ public class Person {
         return address;
     }
 
+    public int getPersonType() {
+        return personType;
+    }
+
     // Setters
     public void setId(Long id) {
         this.id = id;
@@ -70,6 +76,10 @@ public class Person {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public void setPersonType(int personType) {
+        this.personType = personType;
     }
 
     @Override
